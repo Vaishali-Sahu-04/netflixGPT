@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { signOut } from "firebase/auth";
 import { auth } from '../utils/firebase';
 import { useNavigate } from 'react-router-dom';
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import { addUser, removeUser } from '../utils/userSlice'
+import {onAuthStateChanged } from "firebase/auth";
+import { BG_IMG } from '../utils/constant';
+
 const Header = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const handleSignOut = () => {
     signOut(auth).then(() => {
@@ -13,10 +18,31 @@ const Header = () => {
       navigate('/')
     }).catch((error) => {});
   }
+  useEffect(()=>{
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        const {uid,email,displayName,photoURL} = user;
+        dispatch(addUser({
+          uid:uid,
+          email:email,
+          displayName:displayName,
+          photoURL:photoURL,  
+        }));
+        navigate("/browse")
+      } else {
+        // User is signed out
+        dispatch(removeUser());
+        navigate("/")
+      }
+    });
+    //unsubscribe when component unmounts
+    return () => unsubscribe();
+  },[])
   return (
     <div className='absolute z-10 flex items-center justify-between w-full'>
      <img className=' w-44 '
-     src='https://www.freepnglogos.com/uploads/netflix-logo-circle-png-5.png'
+     src={BG_IMG}
      alt='logo'
      />
      {user && (<div className='flex mx-4 gap-4'>

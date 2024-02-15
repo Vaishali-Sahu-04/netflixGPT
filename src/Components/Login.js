@@ -3,14 +3,14 @@ import Header from './Header'
 import { checkValidation } from '../utils/validate'
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile} from "firebase/auth";
 import { auth } from '../utils/firebase';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
+import { photoURL } from '../utils/constant';
+
 const Login = () => {
 
     const [isSignin , setIsSignin] = useState(true)
     const [msg,setMsg] = useState(null)
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     const name = useRef(null)
     const email = useRef(null)
@@ -31,7 +31,7 @@ const Login = () => {
             // Signed up 
             const user = userCredential.user;
             updateProfile(user, {
-              displayName:name.current.value , photoURL: "https://avatars.githubusercontent.com/u/148002088?s=400&u=76c3c0bd995e1df66138103122d8c30f2eb438a1&v=4"
+              displayName:name.current.value , photoURL:photoURL
             }).then(() => {
               const {uid,email,displayName,photoURL} = auth.currentUser;
               dispatch(addUser({
@@ -40,12 +40,9 @@ const Login = () => {
                 displayName:displayName,
                 photoURL:photoURL,  
               }));
-              navigate('/browse');
             }).catch((error) => {
               setMsg(error);
             });
-            console.log(user);
-            navigate('/browse')
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -58,8 +55,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
-          console.log(user);
-          navigate('/browse')
         })
         .catch((error) => {
           const errorCode = error.code;
