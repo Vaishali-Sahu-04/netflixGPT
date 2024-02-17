@@ -5,7 +5,7 @@ import {createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile}
 import { auth } from '../utils/firebase';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
-import { photoURL } from '../utils/constant';
+import { BG_IMG, photoURL } from '../utils/constant';
 
 const Login = () => {
 
@@ -68,7 +68,7 @@ const Login = () => {
       <Header/>
       <div className='absolute w-full'>
         <img className='w-full'
-        src='https://miro.medium.com/v2/resize:fit:1200/1*5lyavS59mazOFnb55Z6znQ.png'
+        src={BG_IMG}
         alt='bg-img'
         />
       </div>
