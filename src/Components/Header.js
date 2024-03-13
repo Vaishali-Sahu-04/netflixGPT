@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import { addUser, removeUser } from '../utils/userSlice'
 import {onAuthStateChanged } from "firebase/auth";
 import { LOGO } from '../utils/constant';
-import { changeLanguage } from '../utils/configSlice';
 
 const Header = () => {
 
@@ -42,9 +41,6 @@ const Header = () => {
     //unsubscribe when component unmounts
     return () => unsubscribe();
   },[])
-  const handleLanguageChange = (e) => {
-    dispatch(changeLanguage(e.target.value));
-  }
   return (
     <div className='absolute z-10 flex items-center justify-between w-full'>
      <img className=' w-44 '
